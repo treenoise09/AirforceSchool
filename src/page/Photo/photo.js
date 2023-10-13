@@ -32,6 +32,11 @@ const Photo = () => {
     // Implement your login logic here
     navigate('/form');
   };
+  const handleBack = (e) => {
+    e.preventDefault();
+    // Implement your login logic here
+    navigate('/');
+  };
 
   return (
     <>
@@ -107,12 +112,12 @@ const Photo = () => {
         </div>
         </div>
       </div>
-        <div className="footer-buttons" onSubmit={handleSubmit}>
-          <Button variant="contained" color="primary">
-            Back
+        <div className="footer-buttons">
+          <Button variant="contained" color="primary" style={{backgroundColor:'#A2A9AD',borderRadius:'0',color:'#000'}} onClick={handleBack}>
+          กลับ
           </Button>
-          <Button variant="contained" color="primary" type='submit'>
-            Next
+          <Button variant="contained" color="primary" type='submit' style={{backgroundColor:'#1A8FDD',borderRadius:'0',color:'#000'}} onClick={handleSubmit}>
+          ถัดไป
           </Button>
         </div>
       </div>

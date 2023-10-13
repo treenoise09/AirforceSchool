@@ -12,8 +12,8 @@ const Header = () => {
   return (
     <AppBar position="static" className="myAppBar">
       <Toolbar className="flex-between">
-        <img src={Logo} alt="Logo" style={{ height: '40px' }} />
-        <div className="menu-items">
+      <div className="menu-items">
+        <img src={Logo} alt="Logo" style={{ width: '95px',height: '96px'}} />
           <Link to="/blankpage"><Typography variant="body1" className="myTypography">หน้าหลัก</Typography></Link>
           <Link to="/blankpage"><Typography variant="body1" className="myTypography">แบบฟอร์มเอกสาร</Typography></Link>
           <Link to="/blankpage"><Typography variant="body1" className="myTypography">คุณสมบัติผู้สมัคร</Typography></Link>
