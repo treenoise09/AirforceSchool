@@ -1,17 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/';
-
-const apiClient = axios.create({
-    baseURL: API_URL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
+const API_URL = 'http://localhost:3001';
 
 export const register = async (data) => {
     try {
-        const response = await apiClient.post('/register', data);
+        const response = await axios.post(API_URL+"/register", data);
         return response.data;
     } catch (error) {
         throw error;
@@ -20,7 +13,7 @@ export const register = async (data) => {
 
 export const login = async (data) => {
     try {
-        const response = await apiClient.post('/login', data);
+        const response = await axios.post(API_URL+'/login', data);
         return response.data;
     } catch (error) {
         throw error;

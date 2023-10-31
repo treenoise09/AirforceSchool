@@ -9,9 +9,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import './form.css'
 import {register} from "../../api/api"
+
+
 const Form = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [formError, setFormError] = useState('');
   const { imagePhoto, imageIDCard} = location.state;
   const [localImagePhoto, setLocalImagePhoto] = useState(imagePhoto);
   const [localImageIDCard, setLocalImageIDCard] = useState(imageIDCard);
@@ -49,8 +52,10 @@ const Form = () => {
   const [nationalityMother, setNationalityMother] = useState('');
   const [contactNumberMother, setContactNumberMother] = useState('');
   const [motherStatus, setMotherStatus] = useState('');
-  const [ethnicityEmergency, setEthnicityEmergency] = useState('');
-  const [nationalityEmergency, setNationalityEmergency] = useState('');
+
+  const [PrefixEmergency, setPrefixEmergency] = useState('');
+  const [firstnameEmergency, setfirstnameEmergency] = useState('');
+  const [lastnameEmergency, setlastnameEmergency] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [militaryCourseCompleted, setMilitaryCourseCompleted] = useState(false);
   const [militaryCourseYear, setMilitaryCourseYear] = useState('');
@@ -62,6 +67,7 @@ const Form = () => {
   const [usability, setUsability] = useState('');
   const [newsChannels, setNewsChannels] = useState('');
   const [reasonForApplying, setReasonForApplying] = useState('');
+  const [suggestion, setSuggestion] = useState("");
   const [promoInterest, setPromoInterest] = useState('');
   const [addressRegistered, setAddressRegistered] = useState({
     houseNo: '',
@@ -108,10 +114,6 @@ const Form = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
-
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
@@ -122,17 +124,20 @@ const Form = () => {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
-    // If it's the last step, compile the data and trigger download
+  
+    if (!validateForm()) {
+      return;
+    }
+  
     if (activeStep === steps.length - 1) {
       const data = compileDataToJson();
       console.log(data);
-      downloadObjectAsJson(data, "mockdata"); // This will save the file as mockdata.json
     } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setActiveStep(activeStep + 1); // Use `setActiveStep` from context
       setSkipped(newSkipped);
     }
   };
+  
 
   const handleBackStep = () => {
     if (activeStep === 0) {
@@ -142,128 +147,72 @@ const Form = () => {
     }
   };
 
-  //   const compileDataToJson = () => {
-  //     const data = {
-  //       imagePhoto: imagePhoto,
-  //       imageIDCard: imageIDCard,
-  //       applicantType: applicantType,
-  //       degree: degree,
-  //       courseType: courseType,
-  //       instituteName: instituteName,
-  //       gpa: gpa,
-  //       province: province,
-  // educationStatus: educationStatus,
-  // citizenID: citizenID,
-  // firstName: firstName,
-  // lastName: lastName,
-  // dob: dob,
-  // ethnicity: ethnicity,
-  // nationality: nationality,
-  // religion: religion,
-  // fatherPrefix: fatherPrefix,
-  // fatherFirstName: fatherFirstName,
-  // fatherLastName: fatherLastName,
-  // raceFather: raceFather,
-  // nationalityFather: nationalityFather,
-  // contactNumberFather: contactNumberFather,
-  // fatherStatus: fatherStatus,
-  // motherPrefix: motherPrefix,
-  // motherFirstName: motherFirstName,
-  // motherLastName: motherLastName,
-  // raceMother: raceMother,
-  // nationalityMother: nationalityMother,
-  // contactNumberMother: contactNumberMother,
-  // motherStatus: motherStatus,
-  // ethnicityEmergency: ethnicityEmergency,
-  // nationalityEmergency: nationalityEmergency,
-  // contactPhone: contactPhone,
-  // militaryCourseCompleted: militaryCourseCompleted,
-  // militaryCourseYear: militaryCourseYear,
-  // childOfMilitary: childOfMilitary,
-  // dataComplete: dataComplete,
-  // webpageFormat: webpageFormat,
-  // readableText: readableText,
-  // webpageSpeed: webpageSpeed,
-  // usability: usability,
-  // newsChannels: newsChannels,
-  // reasonForApplying: reasonForApplying,
-  // promoInterest: promoInterest,
-  // addressRegistered: addressRegistered,
-  // addressCurrent: addressCurrent
-  //     };
+    const compileDataToJson = () => {
+      const data = {
+        imagePhoto: imagePhoto,
+        imageIDCard: imageIDCard,
+        applicantType: applicantType,
+        degree: degree,
+        courseType: courseType,
+        instituteName: instituteName,
+        gpa: gpa,
+        province: province,
+  educationStatus: educationStatus,
+  citizenID: citizenID,
+  firstName: firstName,
+  lastName: lastName,
+  dob: dob,
+  ethnicity: ethnicity,
+  nationality: nationality,
+  religion: religion,
+  fatherPrefix: fatherPrefix,
+  fatherFirstName: fatherFirstName,
+  fatherLastName: fatherLastName,
+  raceFather: raceFather,
+  nationalityFather: nationalityFather,
+  contactNumberFather: contactNumberFather,
+  fatherStatus: fatherStatus,
+  motherPrefix: motherPrefix,
+  motherFirstName: motherFirstName,
+  motherLastName: motherLastName,
+  raceMother: raceMother,
+  nationalityMother: nationalityMother,
+  contactNumberMother: contactNumberMother,
+  motherStatus: motherStatus,
+  PrefixEmergency: PrefixEmergency,
+  firstnameEmergency:firstnameEmergency,
+  lastnameEmergency:lastnameEmergency,
+  contactPhone: contactPhone,
+  militaryCourseCompleted: militaryCourseCompleted,
+  militaryCourseYear: militaryCourseYear,
+  childOfMilitary: childOfMilitary,
+  dataComplete: dataComplete,
+  webpageFormat: webpageFormat,
+  readableText: readableText,
+  webpageSpeed: webpageSpeed,
+  usability: usability,
+  newsChannels: newsChannels,
+  reasonForApplying: reasonForApplying,
+  promoInterest: promoInterest,
+  addressRegistered: addressRegistered,
+  addressCurrent: addressCurrent
+      };
 
-  //     return JSON.stringify(data);
-  //   }
-  const compileDataToJson = () => {
-    const data = {
-      imagePhoto: imagePhoto,
-      imageIDCard: imageIDCard,
-      applicantType: "Undergraduate",
-      degree: "Bachelor of Science",
-      courseType: "Full-time",
-      instituteName: "Mock University",
-      gpa: "3.5",
-      province: "MockProvince",
-      educationStatus: "Completed",
-      citizenID: "1430900248348",
-      firstName: "John",
-      lastName: "Doe",
-      dob: "1990-01-01",
-      ethnicity: "MockEthnicity",
-      nationality: "Mockland",
-      religion: "Mockism",
-      fatherPrefix: "Mr.",
-      fatherFirstName: "Robert",
-      fatherLastName: "Doe",
-      raceFather: "MockRace",
-      nationalityFather: "Mockland",
-      contactNumberFather: "+1234567890",
-      fatherStatus: "Employed",
-      motherPrefix: "Mrs.",
-      motherFirstName: "Jane",
-      motherLastName: "Doe",
-      raceMother: "MockRace",
-      nationalityMother: "Mockland",
-      contactNumberMother: "+0987654321",
-      motherStatus: "Employed",
-      ethnicityEmergency: "MockEthnicity",
-      nationalityEmergency: "Mockland",
-      contactPhone: "+1122334455",
-      militaryCourseCompleted: true,
-      militaryCourseYear: "2010",
-      childOfMilitary: false,
-      dataComplete: "good",
-      webpageFormat: "good",
-      readableText: "good",
-      webpageSpeed: "good",
-      usability: "good",
-      newsChannels: "good",
-      reasonForApplying: "To gain knowledge",
-      promoInterest: "Yes",
-      addressRegistered: "123 Mock Street, MockCity, MockCountry",
-      addressCurrent: "456 AnotherMock Street, MockCity, MockCountry"
-    };
+      return JSON.stringify(data);
+    }
 
-    return JSON.stringify(data);
-  }
-  const downloadObjectAsJson = (exportObj, exportName) => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", exportName + ".json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  }
   const submitData = async () => {
+    if (!validateForm()) {
+      return; // Stop the submission if validation fails
+    }
     // Get the data you want to send
     const dataToSend = compileDataToJson();
   
     // Assuming you have a function called `apiRegister` that takes the data and sends it to the API
     try {
-      const response = await register(dataToSend); // Replace `yourData` with the actual data you want to send
+      const response = await register(JSON.parse(dataToSend)); // Replace `yourData` with the actual data you want to send
       if (response.status === 200) {
-        // Handle success (maybe navigate to another page or show a success message)
+        navigate('/')
       } else {
         // Handle errors (show an error message)
       }
@@ -276,6 +225,7 @@ const Form = () => {
 
   const handleSaveData = () => {
     submitData();
+    navigate("/login")
   };
 
   // You can use the above function wherever you want to get the JSON string.
@@ -304,7 +254,25 @@ const Form = () => {
       reader.readAsDataURL(file);
     }
   };
-
+  const validateForm = () => {
+    // Checking just a few fields for example; include all fields you need to validate
+    if (!degree || !applicantType || !courseType || !instituteName || !gpa || !province || !citizenID || !firstName || !lastName || !dob || !ethnicity || !nationality || !religion || !fatherPrefix || !fatherFirstName || !fatherLastName || !  raceFather || !nationalityFather || !contactNumberFather || !fatherStatus || !motherPrefix || !motherFirstName || !motherLastName || !raceMother || !nationalityMother || !contactNumberMother || !motherStatus || !PrefixEmergency || !firstnameEmergency || !lastnameEmergency || !contactPhone) {
+      setFormError("Please input all required fields.");
+      return false;
+    }
+  
+    // Reset error message and indicate that validation has passed
+    setFormError('');
+    return true;
+  };
+  const handleNumericInputChange = (e, setValue) => {
+    const value = e.target.value;
+    // Use a regular expression to allow only numeric input (including decimal points)
+    if (/^\d*\.?\d*$/.test(value)) {
+      setValue(value);
+    }
+  };
+  
 
   const getStepContent = (step) => {
     switch (step) {
@@ -329,8 +297,9 @@ const Form = () => {
                   aria-labelledby="demo-row-radio-buttons-group-label"
                   name="row-radio-buttons-group"
                 >
-                  <FormControlLabel value="female" control={<Radio />} label="บุคคลพลเรือน" />
-                  <FormControlLabel value="male" control={<Radio />} label="ทหารกองหนุน สังกัด กองทัพอากาศ" />
+<FormControlLabel value="civilian" control={<Radio />} label="บุคคลพลเรือน" />
+<FormControlLabel value="airforce" control={<Radio />} label="ทหารกองหนุน สังกัด กองทัพอากาศ" />
+
                 </RadioGroup>
                 <div className='row d-flex'>
                   <div className='col'>
@@ -370,9 +339,13 @@ const Form = () => {
                     <input
                       type="text"
                       value={gpa}
-                      onChange={(e) => setGpa(e.target.value)}
+                      onChange={(e) => handleNumericInputChange(e, setGpa)}
                       placeholder='ผลการศึกษาเฉลี่ยนสะสมตลอดหลักสูตร'
                       className='ID-input'
+                      pattern="\d*\.?\d*"
+                      min="0"
+  max="4.0"
+  step="0.01"
                     />
                   </div>
                   <div className='col'></div>
@@ -452,7 +425,7 @@ const Form = () => {
                     <FormLabel id="demo-dob-label" style={{ fontSize: '14px' }}>เกิดวันที่</FormLabel>
                     <div>
                       <input
-                        type="text"
+                        type="date"
                         value={dob}
                         onChange={(e) => setDOB(e.target.value)}
                         placeholder='เกิดวันที่'
@@ -578,7 +551,7 @@ const Form = () => {
                       <input
                         type="text"
                         value={contactNumberFather}
-                        onChange={(e) => setContactNumberFather(e.target.value)}
+                        onChange={(e) => handleNumericInputChange(e, setContactNumberFather)}
                         placeholder='เบอร์โทรศัพท์ที่ติดต่อได้'
                         className='ID-input'
                       />
@@ -635,7 +608,7 @@ const Form = () => {
                   </div>
                   <div className='col'>
                     <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>เบอร์โทรศัพท์ที่ติดต่อได้</FormLabel>
-                    <div><input type="text" value={contactNumberMother} onChange={(e) => setContactNumberMother(e.target.value)} placeholder='เบอร์โทรศัพท์ที่ติดต่อได้' className='ID-input' /></div>
+                    <div><input type="text" value={contactNumberMother} onChange={(e) => handleNumericInputChange(e, setContactNumberMother)} placeholder='เบอร์โทรศัพท์ที่ติดต่อได้' className='ID-input' /></div>
                   </div>
                   <div className='col'></div>
                   <div className='col'></div>
@@ -655,16 +628,20 @@ const Form = () => {
                 <div className='text-center' style={{ fontSize: '24px' }}>บุคคลที่สามารถติดต่อได้</div>
                 <div className='row d-flex mb-3'>
                   <div className='col'>
-                    <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>เชื้อชาติ</FormLabel>
-                    <div><input type="text" value={ethnicityEmergency} onChange={(e) => setEthnicityEmergency(e.target.value)} placeholder='เชื้อชาติ' className='ID-input' /></div>
+                    <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>คำนำหน้าชื่อ</FormLabel>
+                    <div><input type="text" value={PrefixEmergency} onChange={(e) => setPrefixEmergency(e.target.value)} placeholder='คำนำหน้าชื่อ' className='ID-input' /></div>
                   </div>
                   <div className='col'>
-                    <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>สัญชาติ</FormLabel>
-                    <div><input type="text" value={nationalityEmergency} onChange={(e) => setNationalityEmergency(e.target.value)} placeholder='สัญชาติ' className='ID-input' /></div>
+                    <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>ชื่อ</FormLabel>
+                    <div><input type="text" value={firstnameEmergency} onChange={(e) => setfirstnameEmergency(e.target.value)} placeholder='ชื่อ' className='ID-input' /></div>
+                  </div>
+                  <div className='col'>
+                    <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>นามสกุล</FormLabel>
+                    <div><input type="text" value={lastnameEmergency} onChange={(e) => setlastnameEmergency(e.target.value)} placeholder='นามสกุล' className='ID-input' /></div>
                   </div>
                   <div className='col'>
                     <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>เบอร์โทรศัพท์ที่ติดต่อได้</FormLabel>
-                    <div><input type="text" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder='เบอร์โทรศัพท์ที่ติดต่อได้' className='ID-input' /></div>
+                    <div><input type="text" value={contactPhone} onChange={(e) => handleNumericInputChange(e, setContactPhone)} placeholder='เบอร์โทรศัพท์ที่ติดต่อได้' className='ID-input' /></div>
                   </div>
                   <div className='col'></div>
                   <div className='col'></div>
@@ -755,16 +732,22 @@ const Form = () => {
                   }))} placeholder='ถนน / ซอย' className='ID-input' /></div>
                 </div>
                 <div className='col'>
-                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>อำเภอ</FormLabel>
-                  <div><input type="text" value={addressRegistered.district} onChange={(e) => setAddressRegistered(prevState => ({
-                    ...prevState, district: e.target.value
-                  }))} placeholder='อำเภอ' className='ID-input' /></div>
+                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>ตำบล / แขวง</FormLabel>
+                  <div><input type="text" value={addressRegistered.subDistrict} onChange={(e) => setAddressRegistered(prevState => ({
+                    ...prevState, subDistrict: e.target.value
+                  }))} placeholder='ตำบล / แขวง' className='ID-input' /></div>
                 </div>
                 <div className='col'></div>
                 <div className='col'></div>
               </div>
               <div className='row d-flex mb-3'>( โปรดระบุที่อยู่ของท่านโดยละเอียด เช่น บ้านเลขที่ หมู่บ้าน อาคาร ชั้น ซอย และถนน )</div>
               <div className='row d-flex mb-3'>
+              <div className='col'>
+                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>อำเภอ / เขต</FormLabel>
+                  <div><input type="text" value={addressRegistered.district} onChange={(e) => setAddressRegistered(prevState => ({
+                    ...prevState, district: e.target.value
+                  }))} placeholder='อำเภอ / เขต' className='ID-input' /></div>
+                </div>
                 <div className='col'>
                   <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>จังหวัด</FormLabel>
                   <div><input type="text" value={addressRegistered.province} onChange={(e) => setAddressRegistered(prevState => ({
@@ -772,23 +755,12 @@ const Form = () => {
                   }))} placeholder='จังหวัด' className='ID-input' /></div>
                 </div>
                 <div className='col'>
-                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>อำเภอ / เขต</FormLabel>
-                  <div><input type="text" value={addressRegistered.district} onChange={(e) => setAddressRegistered(prevState => ({
-                    ...prevState, district: e.target.value
-                  }))} placeholder='อำเภอ / เขต' className='ID-input' /></div>
-                </div>
-                <div className='col'>
-                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>ตำบล / แขวง</FormLabel>
-                  <div><input type="text" value={addressRegistered.subDistrict} onChange={(e) => setAddressRegistered(prevState => ({
-                    ...prevState, subDistrict: e.target.value
-                  }))} placeholder='ตำบล / แขวง' className='ID-input' /></div>
-                </div>
-                <div className='col'>
                   <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>รหัสไปรษณีย์</FormLabel>
                   <div><input type="text" value={addressRegistered.postalCode} onChange={(e) => setAddressRegistered(prevState => ({
                     ...prevState, postalCode: e.target.value
                   }))} placeholder='รหัสไปรษณีย์' className='ID-input' /></div>
                 </div>
+                <div className='col'></div>
                 <div className='col'></div>
                 <div className='col'></div>
               </div>
@@ -825,16 +797,22 @@ const Form = () => {
                   }))} placeholder='ถนน / ซอย' className='ID-input' /></div>
                 </div>
                 <div className='col'>
-                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>อำเภอ</FormLabel>
-                  <div><input type="text" value={addressCurrent.district} onChange={(e) => setAddressCurrent(prevState => ({
-                    ...prevState, district: e.target.value
-                  }))} placeholder='อำเภอ' className='ID-input' /></div>
+                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>ตำบล / แขวง</FormLabel>
+                  <div><input type="text" value={addressCurrent.subDistrict} onChange={(e) => setAddressCurrent(prevState => ({
+                    ...prevState, subDistrict: e.target.value
+                  }))} placeholder='ตำบล / แขวง' className='ID-input' /></div>
                 </div>
                 <div className='col'></div>
                 <div className='col'></div>
               </div>
               <div className='row d-flex mb-3'>( โปรดระบุที่อยู่ของท่านโดยละเอียด เช่น บ้านเลขที่ หมู่บ้าน อาคาร ชั้น ซอย และถนน )</div>
               <div className='row d-flex mb-3'>
+              <div className='col'>
+                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>อำเภอ / เขต</FormLabel>
+                  <div><input type="text" value={addressCurrent.district} onChange={(e) => setAddressCurrent(prevState => ({
+                    ...prevState, district: e.target.value
+                  }))} placeholder='อำเภอ / เขต' className='ID-input' /></div>
+                </div>
                 <div className='col'>
                   <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>จังหวัด</FormLabel>
                   <div><input type="text" value={addressCurrent.province} onChange={(e) => setAddressCurrent(prevState => ({
@@ -842,23 +820,12 @@ const Form = () => {
                   }))} placeholder='จังหวัด' className='ID-input' /></div>
                 </div>
                 <div className='col'>
-                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>อำเภอ / เขต</FormLabel>
-                  <div><input type="text" value={addressCurrent.district} onChange={(e) => setAddressCurrent(prevState => ({
-                    ...prevState, district: e.target.value
-                  }))} placeholder='อำเภอ / เขต' className='ID-input' /></div>
-                </div>
-                <div className='col'>
-                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>ตำบล / แขวง</FormLabel>
-                  <div><input type="text" value={addressCurrent.subDistrict} onChange={(e) => setAddressCurrent(prevState => ({
-                    ...prevState, subDistrict: e.target.value
-                  }))} placeholder='ตำบล / แขวง' className='ID-input' /></div>
-                </div>
-                <div className='col'>
                   <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>รหัสไปรษณีย์</FormLabel>
                   <div><input type="text" value={addressCurrent.postalCode} onChange={(e) => setAddressCurrent(prevState => ({
                     ...prevState, postalCode: e.target.value
                   }))} placeholder='รหัสไปรษณีย์' className='ID-input' /></div>
                 </div>
+                <div className='col'></div>
                 <div className='col'></div>
                 <div className='col'></div>
               </div>
@@ -1041,10 +1008,20 @@ const Form = () => {
                 </RadioGroup>
               </div>
               <div className='row d-flex mb-3 mt-3'>
-                <div className='col text-start'>
-                  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>ข้อเสนอแนะ</FormLabel>
-                  <div><input type="text" value={degree} onChange={(e) => setDegree(e.target.value)} placeholder='ข้อเสนอแนะ' className='ID-input' /></div>
-                </div>
+              <div className='col text-start'>
+  <FormLabel id="demo-row-radio-buttons-group-label" style={{ fontSize: '14px' }}>
+    ข้อเสนอแนะ
+  </FormLabel>
+  <div>
+    <textarea 
+      value={suggestion} 
+      onChange={(e) => setSuggestion(e.target.value)} 
+      placeholder='ข้อเสนอแนะ' 
+      className='ID-input'
+      rows={4} // You can adjust the number of rows
+    />
+  </div>
+</div>
                 <div className='col'></div>
                 <div className='col'></div>
                 <div className='col'></div>
@@ -1121,7 +1098,6 @@ const Form = () => {
                       style={{ display: "none" }}
                       onChange={handleImagePhotoUpload}
                       ref={imagePhotoInput}
-
                     />
                     <Button
                       style={{ color: "#fff", backgroundColor: "#c5c5c5" }}
@@ -1152,7 +1128,7 @@ const Form = () => {
                     />
                     <Button
                       style={{ color: "#fff", backgroundColor: "#c5c5c5" }}
-                      onClick={() => this.imageIDCardInput.click()}
+                      onClick={() => imageIDCardInput.current.click()}
                     >
                       อัพโหลดรูปถ่ายใหม่
                     </Button>
@@ -1164,9 +1140,6 @@ const Form = () => {
                   </div>
                 </div>
               </div>
-              <div className="center mt-5" style={{ backgroundColor: '#000a23', color: "#fff" }}>
-                <Typography variant="h4" className="header-text">ข้อมูลทั่วไป</Typography>
-              </div>
               <div></div>
             </Box>
           </>
@@ -1175,7 +1148,6 @@ const Form = () => {
         return 'Unknown step';
     }
   };
-
   return (
     <>
       <Header />
@@ -1192,7 +1164,11 @@ const Form = () => {
         {getStepContent(activeStep)}
       </div>
       <div>
+        <div className='row mb-2'>
+        {formError && <Typography color="error">{formError}</Typography>}
+        </div>
         <div className="footer-buttons">
+          
           <Button variant="contained" color="primary" style={{ backgroundColor: '#A2A9AD', borderRadius: '0', color: '#000' }} onClick={handleBackStep}>
             กลับ
           </Button>

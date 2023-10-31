@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import Header from '../../component/header';  
 import { Button, Typography } from '@mui/material';
 import './photo.css'; 
-import example from '../../img/example.jpg';
-import exampleRow from '../../img/examplerow.jpg';
+import exampleGood from '../../img/exampleGood.jpg';
+import examplerowGood from '../../img/examplerowGood.jpg';
+import exampleBad from '../../img/exampleBad.jpg';
+import examplerowBad from '../../img/examplerowBad.jpg';
 import { useNavigate,useLocation   } from 'react-router-dom';
 
 const Photo = () => {
@@ -17,16 +19,29 @@ const Photo = () => {
 
   const handleImageChange = (e, setImage) => {
     const file = e.target.files[0];
+  
+    // Check if the file is larger than 1MB
+    if (file && file.size > 1024 * 1024) {
+      alert("File size should be less than 1MB.");
+      return;
+    }
+  
+    // Check if the file type is JPEG or PNG
+    if (file && !['image/jpeg', 'image/png'].includes(file.type)) {
+      alert("Only JPEG and PNG files are allowed.");
+      return;
+    }
+  
     const reader = new FileReader();
-
     reader.onloadend = () => {
       setImage(reader.result);
     };
-
+  
     if (file) {
       reader.readAsDataURL(file);
     }
   };
+  
   const handleDivClickPhoto = () => {
     fileInputRefPhoto.current.click();
 };
@@ -58,11 +73,11 @@ const handleSubmit = (e) => {
           <div className='row'>
           <div className='col'>
         <div className='col'>
-      <img src={example} alt="Example 1" className="example-image example"/>
+      <img src={exampleGood} alt="Example 1" className="example-image example"/>
       <div>รูปถ่ายที่ถูกต้อง</div>
 </div>
 <div className='col'>
-      <img src={exampleRow} alt="Example 2" className="example-image exampleRow"/>
+      <img src={examplerowGood} alt="Example 2" className="example-image exampleRow"/>
       <div>ตัวอย่างรูปบัตรประชาชนที่ถูกต้อง</div>
       </div>
       </div>
@@ -72,19 +87,19 @@ const handleSubmit = (e) => {
         <div className='col'>
         <div className='row'>
           <div className='col'>
-      <img src={example} alt="Example 1" className="example-image example"/>
+      <img src={exampleBad} alt="Example 1" className="example-image example"/>
       </div>
       <div className='col'>
-      <img src={example} alt="Example 1" className="example-image example"/>
+      <img src={exampleBad} alt="Example 1" className="example-image example"/>
       </div>
       <div className='col'>
-      <img src={example} alt="Example 1" className="example-image example"/>
+      <img src={exampleBad} alt="Example 1" className="example-image example"/>
       </div>
       </div>
       <div>รูปถ่ายที่ไม่ถูกต้อง</div>
       </div>
       <div className='col'>
-      <img src={exampleRow} alt="Example 2" className="example-image exampleRow"/>
+      <img src={examplerowBad} alt="Example 2" className="example-image exampleRow"/>
       <div>ตัวอย่างรูปบัตรประชาชนที่ไม่ถูกต้อง</div>
       </div>
       </div>
@@ -93,19 +108,26 @@ const handleSubmit = (e) => {
         <div className="background-text">
         ผู้สมัครโปรดใช่รูปถ่ายครึ่งตัว ขนาด 1 นิ้วเท่านั้น หน้าตรงไม่สวมหมวกและแว่นตาสีเข้ม ซึ่งถ่ายไม่เกิน 6 เดือน ( นับถึงวันปิดรับสมัคร ) และบัตรประจำตัวประชาชน ( ฉบับจริง ) เท่านั้น ( ใช้บัตรอื่นทางราชการออกให้ แทนไม่ได้ ) หากรูปถ่ายรูปบัตรประชาชนไม่ถูกต้องตามที่ระบุในประกาศรับสมัคร อาจจะถูกพิจารณาตัดสิทธิ์
         </div>
+        <div className="example-image-grid">
         <div>
         {imagePhoto && <img src={imagePhoto} alt="Uploaded Photo" className="uploaded-image"/>}
+        <Typography>
+                      รูปถ่ายหน้าตรง
+                    </Typography>
       </div>
       <div>
       {imageIDCard && <img src={imageIDCard} alt="Uploaded ID Card" className="uploaded-image"/>}
-      </div>
+      <Typography>
+                      รูปถ่ายบัตรประชาชน
+                    </Typography>
+                    </div></div>
 
       <div className='upload-container'>
         <div className='d-flex justify-content-between row'>
           <div className='col'>
             <input 
               type="file" 
-              accept="image/*" 
+              accept="image/jpeg, image/png" 
               onChange={(e) => handleImageChange(e, setImagePhoto)} 
               ref={fileInputRefPhoto} 
               style={{ display: 'none' }}
@@ -117,7 +139,7 @@ const handleSubmit = (e) => {
           <div className='col'>
             <input 
               type="file" 
-              accept="image/*" 
+              accept="image/jpeg, image/png" 
               onChange={(e) => handleImageChange(e, setImageIDCard)} 
               ref={fileInputRefIDCard} 
               style={{ display: 'none' }}

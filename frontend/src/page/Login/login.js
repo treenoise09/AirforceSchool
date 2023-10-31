@@ -5,9 +5,11 @@ import Logo from '../../img/Logo.png';
 import ReCAPTCHA from "react-google-recaptcha";
 import Header from '../../component/header';
 import {login} from '../../api/api'; // Import your API module
+import { useUser } from '../../component/UserContext';
 
 const Login = () => {
   const [citizenID, setCitizenID] = useState('');
+  const { userData, setUserData } = useUser();
   const navigate = useNavigate();
   console.log('Site Key:', process.env.REACT_APP_SITE_KEY);
 
@@ -15,21 +17,18 @@ const Login = () => {
     e.preventDefault();
     
     try {
-      const response = await login({ citizenID }); // Replace with your actual API call
+      const response = await login({ citizenID });
 
-      if (response.data) { // Adjust based on your response structure
-        navigate('/');
+      if (response.data) {
+        setUserData(response.data); // Set user data in the context
+        navigate('/profile', { state: { userData: response.data } });
       } else {
         navigate('/photo', { state: { citizenID } });
-
       }
     } catch (error) {
       console.error("Login error:", error);
       navigate('/photo', { state: { citizenID } });
- // Redirect to form if there's an error (optional)
     }
-    
-    console.log('Username:', citizenID);
   };
 
   const handleRecaptcha = (value) => {

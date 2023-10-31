@@ -10,7 +10,13 @@ const Header = () => {
   const navigate = useNavigate();
 
   const navigateToPDFPage = (header, pdfName) => {
-    navigate('/page', { state: { header, pdfName } });
+    if (header === 'หน้าหลัก') {
+      // If the header is 'หน้าหลัก', navigate to '/profile'
+      navigate('/profile');
+    } else {
+      // Otherwise, navigate to '/page' with the specified state
+      navigate('/page', { state: { header, pdfName } });
+    }
   }
 
   return (

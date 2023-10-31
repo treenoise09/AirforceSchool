@@ -74,8 +74,8 @@ router.post("/", async (req, res) => {
                 raceFather, nationalityFather, contactNumberFather, 
                 fatherStatus, motherPrefix, motherFirstName, 
                 motherLastName, raceMother, nationalityMother, 
-                contactNumberMother, motherStatus, ethnicityEmergency, 
-                nationalityEmergency, contactPhone, 
+                contactNumberMother, motherStatus, PrefixEmergency, 
+                firstnameEmergency,lastnameEmergency, contactPhone, 
                 militaryCourseCompleted, militaryCourseYear, 
                 childOfMilitary, dataComplete, webpageFormat, 
                 readableText, webpageSpeed, usability, 
@@ -131,8 +131,9 @@ router.post("/", async (req, res) => {
       nationalityMother,
       contactNumberMother,
       motherStatus,
-      ethnicityEmergency,
-      nationalityEmergency,
+      PrefixEmergency,
+      firstnameEmergency,
+      lastnameEmergency,
       contactPhone,
       militaryCourseCompleted,
       militaryCourseYear,
@@ -161,9 +162,10 @@ router.get("/:id", async (req, res) => {
     const query = "SELECT * FROM register WHERE id=?";
     let result = await pool.execute(query, [req.params.id]);
     if (!result[0]) {
+      
       return res.status(404).json({ success: false });
     } else {
-      return res.json(result[0]);
+      return res.json({ data:result[0],success: true });
     }
   } catch (e) {
     console.log(e);
