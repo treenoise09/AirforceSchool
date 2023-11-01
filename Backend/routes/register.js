@@ -1,5 +1,5 @@
 const express = require("express");
-const { body, validationResult } = require("express-validator");
+const fs = require('fs').promises;
 const pool = require("../db");
 
 const router = express.Router();
@@ -58,10 +58,17 @@ router.post("/", async (req, res) => {
       promoInterest,
       addressRegistered,
       addressCurrent,
+      imagePhotoType,
+      imageIDCardType,
+      PrefixEmergency,
+      firstnameEmergency,
+      lastnameEmergency
     } = req.body;
+    console.log(req.body)
 
     let imagePhoto = decodeBase64Image(req.body.imagePhoto);
     let imageIDCard = decodeBase64Image(req.body.imageIDCard);
+
 
     const query = `
             INSERT INTO register (
@@ -80,7 +87,11 @@ router.post("/", async (req, res) => {
                 childOfMilitary, dataComplete, webpageFormat, 
                 readableText, webpageSpeed, usability, 
                 newsChannels, reasonForApplying, promoInterest, 
-                addressRegistered, addressCurrent
+                addressRegistered, addressCurrent,
+                imagePhotoType,
+                imageIDCardType,
+                ethnicityEmergency,
+                nationalityEmergency
             ) VALUES (
                 ?, ?, ?, 
                 ?, ?, ?, 
@@ -92,14 +103,17 @@ router.post("/", async (req, res) => {
                 ?, ?, ?, 
                 ?, ?, ?, 
                 ?, ?, ?, 
-                ?, ?,
+                ?, ?, ?,
                 ?, ?, 
                 ?, ?, ?, 
                 ?, ?, ?, 
                 ?, ?, ?, 
-                ?, ?)
+                ?, ?,
+                ?,
+                ?,
+                ?,
+                ?)
         `;
-
     await pool.execute(query, [
       imagePhoto,
       imageIDCard,
@@ -148,31 +162,46 @@ router.post("/", async (req, res) => {
       promoInterest,
       addressRegistered,
       addressCurrent,
+      imagePhotoType,
+      imageIDCardType,
+      ethnicityEmergency,
+      nationalityEmergency
     ]);
 
-    res.send({ success: true });
+    return res.send({ success: true });
   } catch (error) {
     console.log(error.message);
-    res.status(500).send({ success: false, error: error.message });
+    return res.status(500).send({ success: false, error: error.message });
   }
 });
 
 router.get("/:id", async (req, res) => {
   try {
     const query = "SELECT * FROM register WHERE id=?";
-    let result = await pool.execute(query, [req.params.id]);
-    if (!result[0]) {
-      
+    const rows = await pool.execute(query, [req.params.id]);
+
+    if (rows.length === 0) {
       return res.status(404).json({ success: false });
     } else {
-      return res.json({ data:result[0],success: true });
+      const user = rows[0]
+      // Convert LONGBLOB data to Base64 strings
+      // Assuming imagePhoto and imageIDCard are stored as LONGBLOB in the database
+      if (user.imagePhoto) {
+        console.log(user.imagePhoto)
+        user.imagePhoto = `data:image/${user.imagePhotoType};base64,${Buffer.from(user.imagePhoto).toString('base64')}`;
+      }
+
+      if (user.imageIDCard) {
+        user.imageIDCard = `data:image/${user.imageIDCardType};base64,${Buffer.from(user.imageIDCard).toString('base64')}`;
+
+      }
+      return res.json({ data: user, success: true });
     }
   } catch (e) {
     console.log(e);
-    return res
-      .status(500)
-      .json({ success: false, message: "Error retrieving user" });
+    return res.status(500).json({ success: false, message: "Error retrieving user" });
   }
 });
+
 
 module.exports = router;

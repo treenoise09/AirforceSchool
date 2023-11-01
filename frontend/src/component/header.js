@@ -11,10 +11,8 @@ const Header = () => {
 
   const navigateToPDFPage = (header, pdfName) => {
     if (header === 'หน้าหลัก') {
-      // If the header is 'หน้าหลัก', navigate to '/profile'
-      navigate('/profile');
+      navigate('/');
     } else {
-      // Otherwise, navigate to '/page' with the specified state
       navigate('/page', { state: { header, pdfName } });
     }
   }
@@ -23,15 +21,15 @@ const Header = () => {
     <AppBar position="static" className="myAppBar">
       <Toolbar className="flex-between">
         <div className="menu-items">
-          <img src={Logo} alt="Logo" style={{ width: '95px', height: '96px' }} />
-          <div onClick={() => navigateToPDFPage('หน้าหลัก')}>หน้าหลัก</div>
-          <div onClick={() => navigateToPDFPage('แบบฟอร์มเอกสาร', 'form')}>แบบฟอร์มเอกสาร</div>
-          <div onClick={() => navigateToPDFPage('คุณสมบัติผู้สมัคร', 'Qualifications')}>คุณสมบัติผู้สมัคร</div>
-          <div onClick={() => navigateToPDFPage('ข้อมูลเหล่าทหาร', 'soldierBranch')}>ข้อมูลเหล่าทหาร</div>
-          <div onClick={() => navigateToPDFPage('การสอบ', 'exam')}>การสอบ</div>
-          <div onClick={() => navigateToPDFPage('การตรวจร่างกายทางการแพทย์', 'checkup')}>การตรวจร่างกายทางการแพทย์</div>
-          <div onClick={() => navigateToPDFPage('ถามตอบสารพันปัญหา', 'QA')}>ถามตอบสารพันปัญหา</div>
-          <div onClick={() => navigateToPDFPage('ติดต่อเรา', 'contract')}>ติดต่อเรา</div>
+          <img src={Logo} alt="Logo" onClick={() => navigate('/')} style={{ width: '95px', height: '96px', cursor:'pointer' }} />
+          <div className='link' onClick={() => navigateToPDFPage('หน้าหลัก')}>หน้าหลัก</div>
+          <div className='link' onClick={() => navigateToPDFPage('แบบฟอร์มเอกสาร', 'form')}>แบบฟอร์มเอกสาร</div>
+          <div className='link' onClick={() => navigateToPDFPage('คุณสมบัติผู้สมัคร', 'Qualifications')}>คุณสมบัติผู้สมัคร</div>
+          <div className='link' onClick={() => navigateToPDFPage('ข้อมูลเหล่าทหาร', 'soldierBranch')}>ข้อมูลเหล่าทหาร</div>
+          <div className='link' onClick={() => navigateToPDFPage('การสอบ', 'exam')}>การสอบ</div>
+          <div className='link' onClick={() => navigateToPDFPage('การตรวจร่างกายทางการแพทย์', 'checkup')}>การตรวจร่างกายทางการแพทย์</div>
+          <div className='link' onClick={() => navigateToPDFPage('ถามตอบสารพันปัญหา', 'QA')}>ถามตอบสารพันปัญหา</div>
+          <div className='link' onClick={() => navigateToPDFPage('ติดต่อเรา', 'contract')}>ติดต่อเรา</div>
         </div>
       </Toolbar>
     </AppBar>

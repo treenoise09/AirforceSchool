@@ -16,12 +16,16 @@ router.post("/", async (req, res) => {
     const result = await pool.execute(query, [
       citizenID,
     ]);
-    if(!result){
-        res.status(200).send({success: true})
+    if(result.length === 0){
+        return res.status(200).send({success: true})
     }
-    res.redirect('/register/'+result[0].id);
+    const query2 = `
+      INSERT INTO Historylogin (user_id, login_datetime, login_status) VALUES ( ?, CURRENT_TIMESTAMP(),'SUCCESS' )
+    `
+    await pool.execute(query2,[result[0].id])
+    return res.redirect('/register/'+result[0].id);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     res.status(500).send({ success: false, error: error.message });
   }
 });

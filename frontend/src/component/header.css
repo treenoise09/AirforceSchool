@@ -17,4 +17,9 @@
     gap: 20px;
     align-items: center;
   }
-  
+  .link {
+    cursor: pointer;
+  }
+  .link:hover{
+    color: blue;
+  }

@@ -9,31 +9,39 @@ import { useUser } from '../../component/UserContext';
 
 const Login = () => {
   const [citizenID, setCitizenID] = useState('');
-  const { userData, setUserData } = useUser();
+  const { userData, setUserData, setLogin } = useUser();
+  const [captcha,setCaptcha] = useState('')
   const navigate = useNavigate();
-  console.log('Site Key:', process.env.REACT_APP_SITE_KEY);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    if(captcha === ''){
+      alert("Please verify captcha")
+      return 
+    }
+    if(citizenID.length !== 13){
+      alert("Citizen Id should be exactly 13 characters long")
+      return
+    }
     try {
       const response = await login({ citizenID });
 
       if (response.data) {
         setUserData(response.data); // Set user data in the context
-        navigate('/profile', { state: { userData: response.data } });
+        setLogin(true)
+        navigate('/register/profile', { state: { userData: response.data } });
       } else {
-        navigate('/photo', { state: { citizenID } });
+        setLogin(true)
+        navigate('/register/photo', { state: { citizenID } });
       }
     } catch (error) {
       console.error("Login error:", error);
-      navigate('/photo', { state: { citizenID } });
+      return alert("Please try again.")
     }
   };
 
   const handleRecaptcha = (value) => {
-    console.log("Captcha value:", value);
-    // You can store this value and send it to your server to verify it.
+    setCaptcha(value)
   }
 
   return (
@@ -49,7 +57,12 @@ const Login = () => {
             <label>
               เลขบัตรประจำตัวประชาชน
               <div>
-                <input type="number" value={citizenID} onChange={(e) => setCitizenID(e.target.value)} maxLength="13" minLength="13" placeholder='เลขบัตรประจำตัวประชาชน' className='ID-input' />
+                <input type="text" value={citizenID} onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '');
+                  if(value.length <= 13){
+                    setCitizenID(value)
+                  }
+                }} maxLength="13" placeholder='เลขบัตรประจำตัวประชาชน' className='ID-input' />
               </div>
             </label>
           </div>

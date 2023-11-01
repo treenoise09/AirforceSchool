@@ -67,7 +67,7 @@ function PDFPage() {
 
 
     const home = () => {
-        navigate('/profile');
+        navigate('/');
     };
 
     const onDocumentLoadSuccess = ({ numPages }) => {
@@ -92,8 +92,8 @@ function PDFPage() {
                 <button className="download-btn" onClick={generateDownloadLink}>DOWNLOAD</button>
                 <div className="icons">
                    
-                    <span onClick={home}>🏠</span>  {/* Home icon */}
-                    <span onClick={handleMenuOpen}>
+                    <span style={{cursor:'pointer'}} onClick={home}>🏠</span>  {/* Home icon */}
+                    <span style={{cursor:'pointer'}} onClick={handleMenuOpen}>
                         ☰
                     </span>
                     <Menu
@@ -138,7 +138,7 @@ function PDFPage() {
                                 <p>
                                     Page {pageNumber || (numPages ? 1 : "--")} of {numPages || "--"}
                                 </p>
-                                <button type="button" disabled={pageNumber <= 1} onClick={previousPage}>
+                                <button type="button" style={{marginRight:5}} disabled={pageNumber <= 1} onClick={previousPage}>
                                     Previous
                                 </button>
                                 <button

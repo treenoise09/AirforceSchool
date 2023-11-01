@@ -6,13 +6,7 @@ import Header from './header';
 import { useUser } from './UserContext'; 
 
 function Profile() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const { userData } = useUser();
-  // Check if userData exists in location state before accessing it
-  const bufferToBase64 = (buf) => {
-    return `data:image/jpeg;base64,${buf.toString('base64')}`;
-}
 
   if (!userData) {
     // Handle the case where userData is not available
@@ -46,13 +40,13 @@ function Profile() {
                             <Typography>
                                 รูปถ่ายหน้าตรง
                             </Typography>
-                            <img src={bufferToBase64(userData.imagePhoto)} alt="User's Photo" />
+                            <img src={userData.imagePhoto} height={240} width={240} alt="User's Photo" />
                         </div>
                         <div className='col-4 d-flex flex-column align-items-center'>
                             <Typography>
                                 รูปถ่ายบัตรประชาชน
                             </Typography>
-                            <img src={bufferToBase64(userData.imageIDCard)} alt="User's ID Card" />
+                            <img src={userData.imageIDCard} height={240} width={240} alt="User's ID Card" />
                         </div>
                         <div className='col-4 d-flex flex-column align-self-center text-start'>
                             <p>เลขประจำตัวประชาชน: {userData.citizenID}</p>

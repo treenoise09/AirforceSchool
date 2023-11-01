@@ -13,11 +13,13 @@ const Photo = () => {
   const citizenID = location.state?.citizenID;
   const [imagePhoto, setImagePhoto] = useState(null);
   const [imageIDCard, setImageIDCard] = useState(null);
+  const [imagePhotoType, setImagePhotoType] = useState(null);
+  const [imageIDCardType, setImageIDCardType] = useState(null);
   const fileInputRefPhoto = React.createRef();
   const fileInputRefIDCard = React.createRef();
   const navigate  = useNavigate();
 
-  const handleImageChange = (e, setImage) => {
+  const handleImageChange = (e, setImage,setType) => {
     const file = e.target.files[0];
   
     // Check if the file is larger than 1MB
@@ -35,6 +37,7 @@ const Photo = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setImage(reader.result);
+      setType('image/jpeg'.includes(file.type) ? 'jpeg' : 'png')
     };
   
     if (file) {
@@ -52,14 +55,18 @@ const handleDivClickIDCard = () => {
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  // Pass the images as state to the /form route
-  navigate('/form', { state: { imagePhoto, imageIDCard ,citizenID} });
+  if(imagePhotoType === null){
+    return alert("Please upload your profile picture")
+  }
+  if(imageIDCardType === null){
+    return alert ("Please upload your Id card picture")
+  }
+  navigate('/register/form', { state: { imagePhoto, imageIDCard ,citizenID,imageIDCardType,imagePhotoType} });
 };
 
   const handleBack = (e) => {
     e.preventDefault();
-    // Implement your login logic here
-    navigate('/');
+    navigate('/login');
   };
 
   return (
@@ -128,7 +135,7 @@ const handleSubmit = (e) => {
             <input 
               type="file" 
               accept="image/jpeg, image/png" 
-              onChange={(e) => handleImageChange(e, setImagePhoto)} 
+              onChange={(e) => handleImageChange(e, setImagePhoto, setImagePhotoType)} 
               ref={fileInputRefPhoto} 
               style={{ display: 'none' }}
             />
@@ -140,7 +147,7 @@ const handleSubmit = (e) => {
             <input 
               type="file" 
               accept="image/jpeg, image/png" 
-              onChange={(e) => handleImageChange(e, setImageIDCard)} 
+              onChange={(e) => handleImageChange(e, setImageIDCard, setImageIDCardType)} 
               ref={fileInputRefIDCard} 
               style={{ display: 'none' }}
             />

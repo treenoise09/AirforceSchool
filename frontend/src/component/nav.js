@@ -45,7 +45,7 @@ const navigateToPDFPage = (header, pdfName) => {
                         }}
                     >
 
-                            <MenuItem value={'หน้าหลัก'} onClick={() => navigateToPDFPage('หน้าหลัก')}>หน้าหลัก</MenuItem>
+                            <MenuItem value={'หน้าหลัก'} onClick={() => home()}>หน้าหลัก</MenuItem>
                             <MenuItem value={'แบบฟอร์มเอกสาร'} onClick={() => navigateToPDFPage('แบบฟอร์มเอกสาร')}>แบบฟอร์มเอกสาร</MenuItem>
                             <MenuItem value={'คุณสมบัติผู้สมัคร'} onClick={() => navigateToPDFPage('คุณสมบัติผู้สมัคร','คุณสมบัติผู้สมัคร')}>คุณสมบัติผู้สมัคร</MenuItem>
                             <MenuItem value={'ข้อมูลเหล่าทหาร'} onClick={() => navigateToPDFPage('ข้อมูลเหล่าทหาร','ข้อมูลเหล่าทหาร')}>ข้อมูลเหล่าทหาร</MenuItem>

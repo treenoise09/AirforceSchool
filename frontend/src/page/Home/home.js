@@ -21,20 +21,20 @@ function Home() {
       <div className='pb-5'>
       <img style={{width: '50%'}} src={BG} alt="Logo" />
       </div>
-      <div onClick={() => navigate('/login')}>
+      <div className='point-cusor' onClick={() => navigate('/login')}>
                     <img style={{width: '50%'}} src={BTN} alt="Logo" />
                 </div>
                 </div>
                 <div className="col-md-4 right-half">
                     <div className='row' style={{width:'90%',justifyContent:'center'}}>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('หน้าหลัก')}>หน้าหลัก</div>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('แบบฟอร์มเอกสาร','form')}>แบบฟอร์มเอกสาร</div>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('คุณสมบัติผู้สมัคร','Qualifications')}>คุณสมบัติผู้สมัคร</div>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('ข้อมูลเหล่าทหาร','soldierBranch')}>ข้อมูลเหล่าทหาร</div>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('การสอบ','exam')}>การสอบ</div>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('การตรวจร่างกายทางการแพทย์','checkup')}>การตรวจร่างกายทางการแพทย์</div>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('ถามตอบสารพันปัญหา','QA')}>ถามตอบสารพันปัญหา</div>
-                        <div className='side p-5' onClick={() => navigateToPDFPage('ติดต่อเรา','contract')}>ติดต่อเรา</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigate('/')}>หน้าหลัก</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigateToPDFPage('แบบฟอร์มเอกสาร','form')}>แบบฟอร์มเอกสาร</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigateToPDFPage('คุณสมบัติผู้สมัคร','Qualifications')}>คุณสมบัติผู้สมัคร</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigateToPDFPage('ข้อมูลเหล่าทหาร','soldierBranch')}>ข้อมูลเหล่าทหาร</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigateToPDFPage('การสอบ','exam')}>การสอบ</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigateToPDFPage('การตรวจร่างกายทางการแพทย์','checkup')}>การตรวจร่างกายทางการแพทย์</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigateToPDFPage('ถามตอบสารพันปัญหา','QA')}>ถามตอบสารพันปัญหา</div>
+                        <div className='side p-5 point-cusor' onClick={() => navigateToPDFPage('ติดต่อเรา','contract')}>ติดต่อเรา</div>
                     </div>
                 </div>
             </div>

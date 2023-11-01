@@ -36,3 +36,8 @@
 .side{
     border-bottom: 5px solid #fff;
 }
+
+.point-cusor:hover{
+    cursor: pointer;
+    color:#0314ff;
+}
